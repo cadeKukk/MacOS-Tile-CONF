@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+# ====== Variables =============================
+
+# Uncomment to refresh ubersicht widget on workspace change
+# Make sure to replace WIDGET NAME for the name of the ubersicht widget
+#ubersicht_spaces_refresh_command="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"WIDGET NAME\"'"
+
+# ===== Loading Scripting Additions ============
+
+# See: https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#macos-sonoma---start-yabai
+# Uncomment the line below to enable JankyBorders if desired (https://github.com/FelixKratz/JankyBorders)
+# borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0 &
+
+# ===== Signals ================================
+
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# ===== Tiling Settings =======================
+
+# Set default layout for spaces
+yabai -m config layout                      bsp
+
+# New window spawns to the right if vertical split, or bottom if horizontal split
+yabai -m config window_placement            second_child
+
+# Default padding
+yabai -m config top_padding                 12
+yabai -m config bottom_padding              12
+yabai -m config left_padding                12
+yabai -m config right_padding               12
+yabai -m config window_gap                  12
+
+# ===== Mouse Settings =========================
+
+# Center mouse on window with focus
+yabai -m config mouse_follows_focus         off
+
+# Modifier for clicking and dragging with mouse
+yabai -m config mouse_modifier              fn
+
+# Set modifier + left-click drag to move window
+yabai -m config mouse_action1               move
+
+# Set modifier + right-click drag to resize window
+yabai -m config mouse_action2               resize
+
+# When window is dropped in center of another window, swap them (on edges it will split)
+yabai -m mouse_drop_action                  swap
+
+# ===== Window Settings =======================
+
+# Floating windows are always on top
+yabai -m config window_topmost              on
+
+# Enable shadows for floating windows
+yabai -m config window_shadow               float
+
+# Window opacity (requires disabling SIP)
+# yabai -m config window_opacity             on
+# yabai -m config active_window_opacity      1.0
+# yabai -m config normal_window_opacity      0.9
+
+# Border settings (requires disabling SIP)
+# yabai -m config window_border               on
+# yabai -m config window_border_width         2
+# yabai -m config active_window_border_color  0xff8CABC8
+# yabai -m config normal_window_border_color  0xff2a2f38
+
+# ===== Window Rules ==========================
+
+# Exclude problematic apps from being managed:
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^QuickTime Player$" manage=off
+yabai -m rule --add app="^System Information$" manage=off
+yabai -m rule --add app="^Activity Monitor$" manage=off
+yabai -m rule --add app="^iStat Menus$" manage=off
+yabai -m rule --add app="^Path Finder$" manage=off
+yabai -m rule --add app="^AppCleaner$" manage=off
+yabai -m rule --add app="^Time Out$" manage=off
+yabai -m rule --add app="^perl_client_app$" manage=off
+yabai -m rule --add app="^console$" manage=off
+yabai -m rule --add app="^Finder$" manage=off
+
+# ===== Status Bar ============================
+
+# Uncomment to show a status bar using either spacebar or simple-bar
+# Change repo and branch as needed; also install the brew dependencies
+
+# SpaceBar Status Bar
+#brew install cmacrae/formulae/spacebar
+#spacebar -m config position                    top
+#spacebar -m config height                      26
+#spacebar -m config title                       on
+#spacebar -m config spaces                      on
+#spacebar -m config clock                       on
+#spacebar -m config power                       on
+#spacebar -m config padding_left                20
+#spacebar -m config padding_right               20
+#spacebar -m config spacing_left                25
+#spacebar -m config spacing_right               15
+#spacebar -m config text_font                   "Helvetica Neue:Regular:12.0"
+#spacebar -m config icon_font                   "Font Awesome 5 Free:Solid:12.0"
+#spacebar -m config background_color            0xff202020
+#spacebar -m config foreground_color            0xffa8a8a8
+#spacebar -m config power_icon_color            0xffcd950c
+#spacebar -m config battery_icon_color          0xffd75f5f
+#spacebar -m config dnd_icon_color              0xffa8a8a8
+#spacebar -m config clock_icon_color            0xffa8a8a8
+#spacebar -m config power_icon_strip            " "
+#spacebar -m config space_icon                  •
+#spacebar -m config space_icon_color            0xffffab91
+#spacebar -m config space_icon_color_secondary  0xff78c4d4
+#spacebar -m config space_icon_color_tertiary   0xfffff9b0
+#spacebar -m config space_icon_strip            1 2 3 4 5 6 7 8 9 10
+#spacebar -m config clock_icon                  
+#spacebar -m config dnd_icon                    
+#spacebar -m config clock_format                "%m/%d/%y %R"
+#spacebar -m config right_shell                 on
+#spacebar -m config right_shell_icon            
+#spacebar -m config right_shell_command         "whoami"
+
+echo "yabai configuration loaded.." 
