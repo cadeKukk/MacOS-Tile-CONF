@@ -1,6 +1,6 @@
 # Yabai Installer 🪟
 
-> A simple, comprehensive guide to install [Yabai](https://github.com/koekeishiya/yabai) - the powerful tiling window manager for macOS.
+> A simple, comprehensive guide to install [Yabai](https://github.com/koekeishiya/yabai)
 
 ## 📋 Table of Contents
 - [Requirements](#requirements)
