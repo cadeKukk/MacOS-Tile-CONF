@@ -9,10 +9,9 @@
 - [Installation](#installation)
   - [Step 1: Install Homebrew](#step-1-install-homebrew)
   - [Step 2: Install Yabai](#step-2-install-yabai)
-  - [Step 3: Configure SIP for Full Functionality](#step-3-configure-sip-for-full-functionality)
-  - [Step 4: Install SKHD (Simple Hotkey Daemon)](#step-4-install-skhd)
-  - [Step 5: Copy Configuration Files](#step-5-copy-configuration-files)
-  - [Step 6: Start the Services](#step-6-start-the-services)
+  - [Step 3: Install SKHD (Simple Hotkey Daemon)](#step-3-install-skhd)
+  - [Step 4: Copy Configuration Files](#step-4-copy-configuration-files)
+  - [Step 5: Start the Services](#step-5-start-the-services)
 - [Configuration](#configuration)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Troubleshooting](#troubleshooting)
@@ -42,34 +41,14 @@ After installation, follow the instructions in the terminal to add Homebrew to y
 brew install koekeishiya/formulae/yabai
 ```
 
-### Step 3: Configure SIP for Full Functionality
-> ⚠️ **Note**: This step is optional but recommended for full functionality. Disabling System Integrity Protection (SIP) partially is necessary for some advanced features.
-
-#### Option A: Disable SIP partially (recommended for full functionality)
-1. Restart your Mac and hold Command (⌘) + R during startup to enter Recovery Mode
-2. Open Terminal from the Utilities menu
-3. Run the following command:
-   ```bash
-   csrutil enable --without debug --without fs
-   ```
-4. Restart your Mac
-5. Run the following in Terminal to properly configure Yabai:
-   ```bash
-   sudo nvram boot-args=-arm64e_preview_abi
-   ```
-   > You'll need to restart after this change
-
-#### Option B: Use Yabai with SIP enabled (limited functionality, but safer)
-Yabai will still work, but some features like window shadows and focus will be limited.
-
-### Step 4: Install SKHD (Simple Hotkey Daemon)
+### Step 3: Install SKHD (Simple Hotkey Daemon)
 SKHD allows you to define keyboard shortcuts to control Yabai.
 
 ```bash
 brew install koekeishiya/formulae/skhd
 ```
 
-### Step 5: Copy Configuration Files
+### Step 4: Copy Configuration Files
 Create the configuration directories if they don't exist:
 
 ```bash
@@ -88,7 +67,7 @@ chmod +x ~/.config/yabai/yabairc
 cp ./skhdrc ~/.config/skhd/skhdrc
 ```
 
-### Step 6: Start the Services
+### Step 5: Start the Services
 
 ```bash
 # Start yabai
@@ -124,10 +103,11 @@ The default shortcuts configuration includes:
 | Shortcut | Action |
 |----------|--------|
 | `ctrl + cmd - a/s/w/d` | Focus window (west/south/north/east) |
-| `ctrl + shift - a/s/w/d` | Swap window (west/south/north/east) |
+| `ctrl + shift - a/s/w/d` | Move window (west/south/north/east) |
+| `ctrl - a/s/w/d` | Resize window (left/down/up/right) |
+| `ctrl - space` | Toggle float for focused window |
 | `ctrl - l` | Rotate layout 90° |
 | `ctrl - k` | Balance layout |
-| `ctrl - space` | Toggle float for focused window |
 | `ctrl - f` | Toggle fullscreen for focused window |
 | `ctrl + alt - 1-9` | Move window to space 1-9 |
 
