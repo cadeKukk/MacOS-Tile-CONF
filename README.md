@@ -2,6 +2,17 @@
 
 > A simple, comprehensive guide to install [Yabai](https://github.com/koekeishiya/yabai)
 
+## Try the window layout
+
+The committed [skhdrc](skhdrc) maps window focus to `ctrl + cmd` plus `a`, `s`, `w`, or `d`. With three ordinary app windows open, try this sequence after installing the configuration:
+
+1. Press `ctrl + cmd + d` to focus the window to the east.
+2. Press `ctrl + shift + s` to move the focused window south.
+3. Press `ctrl + l` to rotate the layout, then `ctrl + k` to balance it.
+4. Press `ctrl + space` to float the focused window and press it again to return it to tiling.
+
+[Download the shortcut reference](docs/shortcuts.txt). It contains the window commands above and their exact mappings from this checkout. It is a text demo guide, so you can keep it beside your terminal while trying the layout.
+
 ## 📋 Table of Contents
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -191,4 +202,4 @@ MIT License
 
 ## 🙏 Acknowledgements
 - [koekeishiya](https://github.com/koekeishiya) for creating Yabai and SKHD
-- All the contributors to the Yabai project 
+- All the contributors to the Yabai project

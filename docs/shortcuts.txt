@@ -1,0 +1,12 @@
+Window layout demo
+
+ctrl + cmd + a / s / w / d      Focus west / south / north / east
+ctrl + shift + a / s / w / d    Warp west / south / north / east
+ctrl + l                       Rotate the current space 90 degrees
+ctrl + k                       Balance the current space
+ctrl + space                   Toggle the focused window's floating state
+ctrl + f                       Toggle zoom-fullscreen for the focused window
+
+Source: skhdrc in this repository. These shortcuts require running yabai
+and skhd with the committed configuration loaded. This file does not install
+anything or change your window layout.
