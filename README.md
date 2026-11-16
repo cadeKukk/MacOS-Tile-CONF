@@ -1,205 +1,185 @@
-# Yabai Installer 🪟
+# MacOS-Tile-CONF
 
-> A simple, comprehensive guide to install [Yabai](https://github.com/koekeishiya/yabai)
+A [yabai](https://github.com/asmvik/yabai) and [skhd](https://github.com/asmvik/skhd) configuration for tiling windows on macOS from the keyboard, with scripts to install it, remove it and list its shortcuts. yabai arranges the windows; skhd turns key presses into yabai commands.
 
-## Try the window layout
+![Diagram: three windows tiled with 12 px gaps, the focused one outlined in blue with W, A, S and D keys marked north, west, south and east. Beside it, the main bindings: ctrl + cmd + WASD focuses, ctrl + shift + WASD moves, ctrl + WASD resizes, ctrl + L rotates, ctrl + K balances, ctrl + F zooms to fullscreen, ctrl + space floats.](docs/layout-keys.png)
 
-The committed [skhdrc](skhdrc) maps window focus to `ctrl + cmd` plus `a`, `s`, `w`, or `d`. With three ordinary app windows open, try this sequence after installing the configuration:
+*A diagram of the layout and the main bindings, drawn from [yabairc](yabairc) and [skhdrc](skhdrc). It is not a screenshot.*
+
+## What's in the repository
+
+| File | What it is |
+|------|------------|
+| [yabairc](yabairc) | yabai settings: bsp layout, 12 px padding and gaps, new windows open as the second child, `fn` + drag to move or resize, and 13 apps left unmanaged (System Settings, Finder, Calculator, Activity Monitor and others) |
+| [skhdrc](skhdrc) | The keyboard shortcuts listed below |
+| [install.sh](install.sh) | Installs Homebrew if missing, installs yabai and skhd, copies both files into `~/.config` and tries to start the services (see [Known issues](#known-issues)) |
+| [uninstall.sh](uninstall.sh) | Asks for confirmation, then removes yabai, skhd and both config folders |
+| [shortcuts.sh](shortcuts.sh) | Prints every binding in the installed `skhdrc`, or the one in this folder if none is installed |
+| [docs/shortcuts.txt](docs/shortcuts.txt) | A short plain-text list of the window shortcuts |
+
+## Requirements
+
+- macOS Big Sur (11) or later, which is what the yabai formula asks for
+- [Homebrew](https://brew.sh)
+- Accessibility permission for yabai and skhd (System Settings > Privacy & Security > Accessibility)
+- For the shortcuts that create, remove or send windows to spaces: System Integrity Protection partially disabled and yabai's scripting addition loaded. See [Spaces and the scripting addition](#spaces-and-the-scripting-addition).
+
+## Install
+
+```bash
+git clone https://github.com/cadeKukk/MacOS-Tile-CONF.git
+cd MacOS-Tile-CONF
+
+brew install koekeishiya/formulae/yabai
+brew install koekeishiya/formulae/skhd
+
+mkdir -p ~/.config/yabai ~/.config/skhd
+cp ./yabairc ~/.config/yabai/yabairc
+chmod +x ~/.config/yabai/yabairc
+cp ./skhdrc ~/.config/skhd/skhdrc
+
+yabai --start-service
+skhd --start-service
+```
+
+The two formulas don't define a Homebrew service, so yabai and skhd are started with their own `--start-service` option rather than `brew services start`. Each one writes a launchd agent to `~/Library/LaunchAgents` and starts at login.
+
+After editing either file, reload it:
+
+```bash
+yabai --restart-service
+skhd --restart-service
+```
+
+## Try it
+
+With three ordinary app windows open:
 
 1. Press `ctrl + cmd + d` to focus the window to the east.
 2. Press `ctrl + shift + s` to move the focused window south.
 3. Press `ctrl + l` to rotate the layout, then `ctrl + k` to balance it.
-4. Press `ctrl + space` to float the focused window and press it again to return it to tiling.
+4. Press `ctrl + space` to float the focused window, and again to tile it.
 
-[Download the shortcut reference](docs/shortcuts.txt). It contains the window commands above and their exact mappings from this checkout. It is a text demo guide, so you can keep it beside your terminal while trying the layout.
+## Keyboard shortcuts
 
-## 📋 Table of Contents
-- [Requirements](#requirements)
-- [Installation](#installation)
-  - [Step 1: Install Homebrew](#step-1-install-homebrew)
-  - [Step 2: Install Yabai](#step-2-install-yabai)
-  - [Step 3: Install SKHD (Simple Hotkey Daemon)](#step-3-install-skhd)
-  - [Step 4: Copy Configuration Files](#step-4-copy-configuration-files)
-  - [Step 5: Start the Services](#step-5-start-the-services)
-- [Configuration](#configuration)
-- [Keyboard Shortcuts](#keyboard-shortcuts)
-- [Troubleshooting](#troubleshooting)
-- [Updating](#updating)
-- [Uninstalling](#uninstalling)
-- [Scripts](#scripts)
+Every active binding in [skhdrc](skhdrc).
 
-## 🔧 Requirements
-- macOS Big Sur (11.0) or later
-- Administrator access
-- Terminal knowledge (basic)
-
-## 🚀 Installation
-
-### Step 1: Install Homebrew
-Homebrew is a package manager for macOS that we'll use to install Yabai.
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-After installation, follow the instructions in the terminal to add Homebrew to your PATH.
-
-### Step 2: Install Yabai
-
-```bash
-brew install koekeishiya/formulae/yabai
-```
-
-### Step 3: Install SKHD (Simple Hotkey Daemon)
-SKHD allows you to define keyboard shortcuts to control Yabai.
-
-```bash
-brew install koekeishiya/formulae/skhd
-```
-
-### Step 4: Copy Configuration Files
-Create the configuration directories if they don't exist:
-
-```bash
-mkdir -p ~/.config/yabai
-mkdir -p ~/.config/skhd
-```
-
-Copy the configuration files:
-
-```bash
-# Copy the yabairc config
-cp ./yabairc ~/.config/yabai/yabairc
-chmod +x ~/.config/yabai/yabairc
-
-# Copy the skhdrc config
-cp ./skhdrc ~/.config/skhd/skhdrc
-```
-
-### Step 5: Start the Services
-
-```bash
-# Start yabai
-brew services start yabai
-
-# Start skhd
-brew services start skhd
-```
-
-## ⚙️ Configuration
-The default configuration files included in this repository provide:
-
-- Tiling window management
-- Window shortcuts for navigation, resizing, and reorganizing
-- Space (desktop) management
-- Multi-monitor support
-
-### Customizing Yabai (yabairc)
-Edit the configuration file:
-```bash
-nano ~/.config/yabai/yabairc
-```
-
-### Customizing Shortcuts (skhdrc)
-Edit the configuration file:
-```bash
-nano ~/.config/skhd/skhdrc
-```
-
-## ⌨️ Keyboard Shortcuts
-The default shortcuts configuration includes:
+### Windows
 
 | Shortcut | Action |
 |----------|--------|
-| `ctrl + cmd - a/s/w/d` | Focus window (west/south/north/east) |
-| `ctrl + shift - a/s/w/d` | Move window (west/south/north/east) |
-| `ctrl - a/s/w/d` | Resize window (left/down/up/right) |
-| `ctrl - space` | Toggle float for focused window |
-| `ctrl - l` | Rotate layout 90° |
-| `ctrl - k` | Balance layout |
-| `ctrl - f` | Toggle fullscreen for focused window |
-| `ctrl + alt - 1-9` | Move window to space 1-9 |
+| `ctrl + cmd - a/s/w/d` | Focus the window to the west / south / north / east |
+| `ctrl + shift - a/s/w/d` | Move the focused window west / south / north / east |
+| `ctrl - a/s/w/d` | Push one edge of the focused window 100 px left / down / up / right |
+| `ctrl - space` | Float or tile the focused window |
+| `ctrl - f` | Zoom the focused window to fill the screen, or back |
+| `ctrl + shift - x/z/c` | Send the focused window to display 1 / 2 / 3 and follow it |
 
-> 📝 Use the included `shortcuts.sh` script to view all available shortcuts in a nicely formatted way:
-> ```bash
-> ./shortcuts.sh
-> ```
+### Layout
 
-## 🔍 Troubleshooting
+| Shortcut | Action |
+|----------|--------|
+| `ctrl - l` | Rotate the layout 90° |
+| `ctrl - k` | Balance window sizes |
+| `ctrl - j` | Switch the space to the stack layout |
+| `ctrl - h` | Switch the space between bsp and float (uses `jq`) |
+| `ctrl - g` | Toggle padding and gaps on the space |
+| `ctrl - y` | Meant to set all padding and the gap to 0 (see [Known issues](#known-issues)) |
+| `ctrl - u` | Set the window gap back to 12 |
+| `ctrl - o` / `ctrl - p` | Turn focus-follows-mouse on (autofocus) / off |
 
-### Yabai not working properly
-1. Check if the services are running:
-   ```bash
-   brew services list
-   ```
+### Spaces
 
-2. Check logs for errors:
-   ```bash
-   cat /usr/local/var/log/yabai/yabai.out.log
-   cat /usr/local/var/log/yabai/yabai.err.log
-   ```
+These need the scripting addition.
 
-3. Restart the services:
-   ```bash
-   brew services restart yabai
-   brew services restart skhd
-   ```
+| Shortcut | Action |
+|----------|--------|
+| `ctrl + alt - 1` to `9` | Send the focused window to space 1 to 9 and follow it |
+| `ctrl - n` | Create a space on the active display |
+| `ctrl - m` | Remove the focused space |
+| `ctrl + alt + shift - d` | Remove every empty space that isn't focused (uses `jq`) |
 
-## 🔄 Updating
+### Apps and extras
 
-To update Yabai to the latest version:
+| Shortcut | Action | Needs |
+|----------|--------|-------|
+| `ctrl - return` | Open Alacritty, or a new Alacritty window if it is running | Alacritty |
+| `ctrl + shift - return` | Open Firefox | Firefox |
+| `ctrl + cmd - return` | Open `~/Downloads` (bound twice, see [Known issues](#known-issues)) | |
+| `ctrl - e` | Launch a new instance of Safari | |
+| `ctrl - r` | Switch audio output to "MacBook Pro Speakers" | `SwitchAudioSource` |
+| `ctrl + alt + cmd - l` | Download the audio of the URL on the clipboard to `~/Downloads` | `yt-dlp` |
+| `ctrl + alt + cmd - r` | Restart yabai | |
+
+skhd takes these keys in every app, so the plain `ctrl` bindings replace the usual `ctrl - a`, `ctrl - e`, `ctrl - k` and similar editing keys in terminals and text fields. Change the modifier in `~/.config/skhd/skhdrc` if you rely on those.
+
+To print the bindings from the terminal:
+
+```bash
+./shortcuts.sh
+```
+
+## Spaces and the scripting addition
+
+`yabairc` runs `sudo yabai --load-sa` on start and again whenever the Dock restarts. That loads yabai's scripting addition, which yabai needs to create and remove spaces and, on recent macOS versions, to send a window to another space. It takes two things:
+
+1. System Integrity Protection partially disabled. Follow yabai's guide: [Disabling System Integrity Protection](https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection).
+2. A sudoers entry so `sudo yabai --load-sa` can run without a password: [Configure scripting addition](https://github.com/asmvik/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition).
+
+Without them yabai still tiles, focuses, moves and resizes windows, and its error log shows a sudo password error from that line each time `yabairc` loads.
+
+## Troubleshooting
+
+Check that both are running:
+
+```bash
+pgrep -lx yabai
+pgrep -lx skhd
+```
+
+Read the logs:
+
+```bash
+cat /tmp/yabai_$USER.err.log
+cat /tmp/skhd_$USER.err.log
+```
+
+If a shortcut does nothing, check that yabai and skhd are both listed under Accessibility in System Settings, then restart them with the commands under [Install](#install).
+
+`cannot locate a bsp node fence` in skhd's log after a resize is expected: each resize binding tries two edges of the window, and one of them has no neighbour.
+
+## Updating
 
 ```bash
 brew update
-brew upgrade yabai
-brew upgrade skhd
+brew upgrade yabai skhd
+yabai --restart-service
+skhd --restart-service
 ```
 
-## 🗑️ Uninstalling
-
-If you want to completely remove Yabai and SKHD:
+## Uninstalling
 
 ```bash
-# Manual uninstallation
-brew services stop yabai
-brew services stop skhd
-brew uninstall yabai
-brew uninstall skhd
-rm -rf ~/.config/yabai
-rm -rf ~/.config/skhd
+yabai --uninstall-service
+skhd --uninstall-service
+brew uninstall yabai skhd
+rm -rf ~/.config/yabai ~/.config/skhd
 ```
 
-Or simply use the included uninstall script:
+## Known issues
 
-```bash
-./uninstall.sh
-```
+Checked against yabai 7.1.15 and skhd 0.3.9.
 
-## 📜 Scripts
+- `install.sh` and `uninstall.sh` start and stop the two tools with `brew services`, which the current formulas don't define a service for. After `install.sh`, start them with `yabai --start-service` and `skhd --start-service`. Before `uninstall.sh`, run `yabai --uninstall-service` and `skhd --uninstall-service`.
+- `yabairc` sets `mouse_drop_action` without the `config` keyword, and sets `window_topmost`, which yabai 7.1.15's manual no longer lists as a setting.
+- `ctrl - y` in `skhdrc` joins five yabai commands with backslashes on one line, so it runs as one malformed command instead of five settings.
+- `ctrl + cmd - return` is bound twice in `skhdrc`: once to `~/Downloads` and once to the placeholder path `/Users/name/example/path`.
+- `shortcuts.sh` cuts each action at its first colon, so the resize bindings show as `yabai -m window --resize left` and the Safari one stops at `"https`. It also shows only the first line of the multi-line `ctrl + alt + shift - d` binding.
 
-This repository includes several helpful scripts:
+## License
 
-- **install.sh**: Automated installer for Yabai and SKHD
-- **uninstall.sh**: Removes Yabai, SKHD, and all configurations
-- **shortcuts.sh**: Displays all configured keyboard shortcuts in a readable format
+MIT. See [LICENSE](LICENSE).
 
-To use any script, first make it executable (if you haven't already):
+## Acknowledgements
 
-```bash
-chmod +x script_name.sh
-```
-
-Then run it:
-
-```bash
-./script_name.sh
-```
-
----
-
-## 📝 License
-MIT License
-
-## 🙏 Acknowledgements
-- [koekeishiya](https://github.com/koekeishiya) for creating Yabai and SKHD
-- All the contributors to the Yabai project
+yabai and skhd are written by [Åsmund Vikane](https://github.com/asmvik).
