@@ -28,19 +28,25 @@ fi
 echo -e "${CYAN}Showing shortcuts from: ${CONFIG_FILE}${NC}\n"
 
 # Parse the shortcuts file and display in a nice format
-grep -v '^#' "$CONFIG_FILE" | grep -v '^$' | while read -r line; do
-    # Skip commented lines and empty lines (more robust check)
+# Join lines that end in a backslash, so a multi-line binding is read as one
+awk '{ if (sub(/\\[[:space:]]*$/, "")) { printf "%s", $0 } else { print } }' "$CONFIG_FILE" | while IFS= read -r line; do
+    # Skip commented lines and empty lines
     if [[ "$line" =~ ^[[:space:]]*# || "$line" =~ ^[[:space:]]*$ ]]; then
         continue
     fi
-    
-    # Extract shortcut and action
-    shortcut=$(echo "$line" | awk -F ':' '{print $1}' | sed 's/^ *//;s/ *$//')
-    action=$(echo "$line" | awk -F ':' '{print $2}' | sed 's/^ *//;s/ *$//')
-    
+
+    # Only lines of the form "keys : command" are bindings
+    if [[ "$line" != *:* ]]; then
+        continue
+    fi
+
+    # Split at the first colon only; the command may contain colons itself
+    shortcut=$(printf '%s' "${line%%:*}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    action=$(printf '%s' "${line#*:}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//;s/[[:space:]][[:space:]]*/ /g')
+
     # Only process valid shortcuts
     if [ -n "$shortcut" ] && [ -n "$action" ]; then
-        echo -e "${YELLOW}${shortcut}${NC} → ${GREEN}${action}${NC}"
+        printf '%b%s%b → %b%s%b\n' "$YELLOW" "$shortcut" "$NC" "$GREEN" "$action" "$NC"
     fi
 done
 

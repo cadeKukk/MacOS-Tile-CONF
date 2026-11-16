@@ -53,7 +53,7 @@ ctrl - f         : yabai -m window --toggle zoom-fullscreen
 # Toggle padding on/off
 ctrl - g         : yabai -m space --toggle padding --toggle gap
 # Disable padding overall
-ctrl - y         : yabai -m config top_padding 0 \ yabai -m config bottom_padding 0 \ yabai -m config left_padding 0 \ yabai -m config right_padding 0 \ yabai -m config window_gap 0
+ctrl - y         : yabai -m config top_padding 0 ; yabai -m config bottom_padding 0 ; yabai -m config left_padding 0 ; yabai -m config right_padding 0 ; yabai -m config window_gap 0
 ctrl - u         : yabai -m config window_gap 12
 # Focus 
 ctrl - o         : yabai -m config focus_follows_mouse autofocus
@@ -117,8 +117,8 @@ ctrl - return : ps aux | grep -v grep | grep -q "Alacritty" && echo "Alacritty i
 ctrl + shift - return : open -a Firefox
 ctrl + cmd - return : open ~/Downloads
 
-# Open finder in a c∑ertain path
-ctrl + cmd - return : open /Users/name/example/path
+# Open finder in a certain path (example; replace the path and pick a free key before enabling)
+# ctrl + cmd - return : open /Users/name/example/path
 
 # Quickly restart yabai
 ctrl + alt + cmd - r : yabai --restart-service

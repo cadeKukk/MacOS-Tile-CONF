@@ -12,7 +12,7 @@ A [yabai](https://github.com/asmvik/yabai) and [skhd](https://github.com/asmvik/
 |------|------------|
 | [yabairc](yabairc) | yabai settings: bsp layout, 12 px padding and gaps, new windows open as the second child, `fn` + drag to move or resize, and 13 apps left unmanaged (System Settings, Finder, Calculator, Activity Monitor and others) |
 | [skhdrc](skhdrc) | The keyboard shortcuts listed below |
-| [install.sh](install.sh) | Installs Homebrew if missing, installs yabai and skhd, copies both files into `~/.config` and tries to start the services (see [Known issues](#known-issues)) |
+| [install.sh](install.sh) | Installs Homebrew if missing, installs yabai and skhd, copies both files into `~/.config` and starts both services |
 | [uninstall.sh](uninstall.sh) | Asks for confirmation, then removes yabai, skhd and both config folders |
 | [shortcuts.sh](shortcuts.sh) | Prints every binding in the installed `skhdrc`, or the one in this folder if none is installed |
 | [docs/shortcuts.txt](docs/shortcuts.txt) | A short plain-text list of the window shortcuts |
@@ -41,6 +41,8 @@ cp ./skhdrc ~/.config/skhd/skhdrc
 yabai --start-service
 skhd --start-service
 ```
+
+`./install.sh` runs the same steps from inside the cloned folder.
 
 The two formulas don't define a Homebrew service, so yabai and skhd are started with their own `--start-service` option rather than `brew services start`. Each one writes a launchd agent to `~/Library/LaunchAgents` and starts at login.
 
@@ -84,7 +86,7 @@ Every active binding in [skhdrc](skhdrc).
 | `ctrl - j` | Switch the space to the stack layout |
 | `ctrl - h` | Switch the space between bsp and float (uses `jq`) |
 | `ctrl - g` | Toggle padding and gaps on the space |
-| `ctrl - y` | Meant to set all padding and the gap to 0 (see [Known issues](#known-issues)) |
+| `ctrl - y` | Set all padding and the window gap to 0 |
 | `ctrl - u` | Set the window gap back to 12 |
 | `ctrl - o` / `ctrl - p` | Turn focus-follows-mouse on (autofocus) / off |
 
@@ -105,7 +107,7 @@ These need the scripting addition.
 |----------|--------|-------|
 | `ctrl - return` | Open Alacritty, or a new Alacritty window if it is running | Alacritty |
 | `ctrl + shift - return` | Open Firefox | Firefox |
-| `ctrl + cmd - return` | Open `~/Downloads` (bound twice, see [Known issues](#known-issues)) | |
+| `ctrl + cmd - return` | Open `~/Downloads` | |
 | `ctrl - e` | Launch a new instance of Safari | |
 | `ctrl - r` | Switch audio output to "MacBook Pro Speakers" | `SwitchAudioSource` |
 | `ctrl + alt + cmd - l` | Download the audio of the URL on the clipboard to `~/Downloads` | `yt-dlp` |
@@ -166,15 +168,7 @@ brew uninstall yabai skhd
 rm -rf ~/.config/yabai ~/.config/skhd
 ```
 
-## Known issues
-
-Checked against yabai 7.1.15 and skhd 0.3.9.
-
-- `install.sh` and `uninstall.sh` start and stop the two tools with `brew services`, which the current formulas don't define a service for. After `install.sh`, start them with `yabai --start-service` and `skhd --start-service`. Before `uninstall.sh`, run `yabai --uninstall-service` and `skhd --uninstall-service`.
-- `yabairc` sets `mouse_drop_action` without the `config` keyword, and sets `window_topmost`, which yabai 7.1.15's manual no longer lists as a setting.
-- `ctrl - y` in `skhdrc` joins five yabai commands with backslashes on one line, so it runs as one malformed command instead of five settings.
-- `ctrl + cmd - return` is bound twice in `skhdrc`: once to `~/Downloads` and once to the placeholder path `/Users/name/example/path`.
-- `shortcuts.sh` cuts each action at its first colon, so the resize bindings show as `yabai -m window --resize left` and the Safari one stops at `"https`. It also shows only the first line of the multi-line `ctrl + alt + shift - d` binding.
+`./uninstall.sh` does the same after asking for confirmation.
 
 ## License
 
