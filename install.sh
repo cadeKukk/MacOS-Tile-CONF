@@ -90,8 +90,8 @@ print_success "Configuration files copied."
 
 # Start services
 print_message "Starting Yabai and SKHD services..."
-brew services start yabai
-brew services start skhd
+yabai --start-service
+skhd --start-service
 print_success "Services started."
 
 # Information about SIP
@@ -119,7 +119,7 @@ echo "  - ~/.config/yabai/yabairc"
 echo "  - ~/.config/skhd/skhdrc"
 echo
 echo "To restart the services after making changes:"
-echo "  brew services restart yabai"
-echo "  brew services restart skhd"
+echo "  yabai --restart-service"
+echo "  skhd --restart-service"
 echo
 echo "Enjoy your new tiling window manager!" 

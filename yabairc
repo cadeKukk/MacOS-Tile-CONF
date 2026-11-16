@@ -47,12 +47,9 @@ yabai -m config mouse_action1               move
 yabai -m config mouse_action2               resize
 
 # When window is dropped in center of another window, swap them (on edges it will split)
-yabai -m mouse_drop_action                  swap
+yabai -m config mouse_drop_action           swap
 
 # ===== Window Settings =======================
-
-# Floating windows are always on top
-yabai -m config window_topmost              on
 
 # Enable shadows for floating windows
 yabai -m config window_shadow               float

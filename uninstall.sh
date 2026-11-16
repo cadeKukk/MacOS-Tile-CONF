@@ -40,8 +40,10 @@ fi
 
 # Stop services
 print_message "Stopping Yabai and SKHD services..."
-brew services stop yabai 2>/dev/null
-brew services stop skhd 2>/dev/null
+yabai --stop-service 2>/dev/null
+yabai --uninstall-service 2>/dev/null
+skhd --stop-service 2>/dev/null
+skhd --uninstall-service 2>/dev/null
 print_success "Services stopped."
 
 # Uninstall packages
